@@ -26,9 +26,10 @@ export const setupServer = () => {
         const contact = await getContactById(contactId);
 
         if (!contact) {
-            res.status(404).json({
+            res.json({
+                status:404,
                 message: 'Contact not found',
-            });
+                 });
             return;
         }
         res.status(200).json({
@@ -47,7 +48,7 @@ export const setupServer = () => {
 
     app.use(express.json());
     app.use(cors());
-    app.subscribe('*', (req, res, next) => {
+    app.use('*', (req, res, next) => {
         res.status(404).json({
             message: "Not found",
     });
