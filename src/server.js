@@ -4,6 +4,8 @@ import cors from "cors";
 import { getEnvVar } from "./utils/getEnvVar.js";
 import { getAllContactsController, getContactByIdController } from "./controllers/contacts.js";
 import contactsRouter from "./routers/contacts.js";
+import { errorHandlerMiddleware } from "./middlewares/errorHandler.js";
+import { notFoundHandlerMiddleware } from "./middlewares/notFoundHandler.js";
 
 
 const PORT = Number(getEnvVar("PORT", "3000"));
@@ -28,6 +30,11 @@ export const setupServer = () => {
   );
 
   app.use(contactsRouter);
+
+  app.use(notFoundHandlerMiddleware);
+
+  app.use(errorHandlerMiddleware);
+
     app.use(express.json());
     app.use(cors());
     app.use('*', (req, res, next) => {

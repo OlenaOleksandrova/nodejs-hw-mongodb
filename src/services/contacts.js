@@ -1,3 +1,4 @@
+import createHttpError from "http-errors";
 import { contactsCollection } from "../db/models/Contacts.js";
 
 // export const getAllContacts = async () => {
@@ -6,4 +7,15 @@ import { contactsCollection } from "../db/models/Contacts.js";
 // };
 
 export const getAllContacts = () => contactsCollection.find();
-export const getContactById = (contactId) => contactsCollection.findById(contactId);
+
+// export const getContactById = (contactId) => contactsCollection.findById(contactId);
+
+export const getContactById = async (contactId) => {
+    const contact = await contactsCollection.findById(contactId);
+
+  if (!contact) {
+            throw new createHttpError(404, "Something wrong");
+                 }
+            return contact;
+        };
+
