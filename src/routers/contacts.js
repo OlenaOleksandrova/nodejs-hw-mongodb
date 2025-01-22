@@ -1,18 +1,20 @@
 import { Router } from "express";
 import { getAllContacts, getContactById } from "../services/contacts.js";
+import { ctrlWrapper } from "../utils/ctrlWrapper.js";
 
 
 const contactsRouter = Router();
 
-contactsRouter.get('/contacts', async (req, res) => {
+contactsRouter.get('/contacts', ctrlWrapper(async (req, res) => {
     const contacts = await getAllContacts();
     res.status(200).json({
         data: contacts,
         message: "Successfully found contacts!",
     });
-});
+})
+);
 
-contactsRouter.get('/contacts/:contactId', async (req, res, next) => {
+contactsRouter.get('/contacts/:contactId', ctrlWrapper(async (req, res, next) => {
     const { contactId } = req.params;
     const contact = await getContactById(contactId);
 
@@ -27,7 +29,8 @@ contactsRouter.get('/contacts/:contactId', async (req, res, next) => {
         message: `Successfully found contact with id ${contactId}!`,
         data: contact,
     });
-});
+})
+);
 
 
 export default contactsRouter;
