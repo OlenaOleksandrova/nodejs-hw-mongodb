@@ -18,4 +18,4 @@ export const getContactById = async (contactId) => {
                  }
             return contact;
         };
-
+export const createContact = (contactData) => contactsCollection.create(contactData);
