@@ -2,7 +2,7 @@ import { Router } from "express";
 import { getAllContacts, getContactById } from "../services/contacts.js";
 import { ctrlWrapper } from "../utils/ctrlWrapper.js";
 import createHttpError from "http-errors";
-import { deleteContactByIdController } from "../controllers/contacts.js";
+import { deleteContactByIdController, patchContactController } from "../controllers/contacts.js";
 
 
 const contactsRouter = Router();
@@ -22,11 +22,6 @@ contactsRouter.get('/contacts/:contactId', ctrlWrapper(async (req, res, next) =>
 
     if (!contact) {
 
-        // res.status(404).json({
-        //     status: 404,
-        //     message: 'Contact not found',
-        //      });
-
         throw createHttpError(404, "Contact not found");
 
     }
@@ -37,6 +32,8 @@ contactsRouter.get('/contacts/:contactId', ctrlWrapper(async (req, res, next) =>
 
 })
 );
+
+contactsRouter.patch('/:contactId', ctrlWrapper(patchContactController));
 
 contactsRouter.delete('/contacts/:contactId', ctrlWrapper(deleteContactByIdController));
 

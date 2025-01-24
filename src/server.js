@@ -33,6 +33,8 @@ export const setupServer = () => {
 
   app.use(contactsRouter);
 
+  app.use('/contacts', contactsRouter);
+
   app.use(notFoundHandlerMiddleware);
 
   app.use(errorHandlerMiddleware);
