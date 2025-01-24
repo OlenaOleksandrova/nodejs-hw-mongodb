@@ -47,6 +47,19 @@ export const patchContactController = async (req, res) => {
     });
 };
 
+export const putContactController = async (req, res) => {
+    const {contactId} = req.params;
+    const {body} = req;
+
+    const contact = await updateContact(contactId, body, {upsert:true});
+
+    res.json({
+        status: 200,
+	message: "Contact is upsert!",
+	data: contact,
+    });
+};
+
 export const deleteContactByIdController = async (req, res, next) => {
     const { contactId } = req.params;
 
