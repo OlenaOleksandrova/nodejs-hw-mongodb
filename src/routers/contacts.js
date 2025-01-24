@@ -2,6 +2,7 @@ import { Router } from "express";
 import { getAllContacts, getContactById } from "../services/contacts.js";
 import { ctrlWrapper } from "../utils/ctrlWrapper.js";
 import createHttpError from "http-errors";
+import { deleteContactByIdController } from "../controllers/contacts.js";
 
 
 const contactsRouter = Router();
@@ -37,5 +38,6 @@ contactsRouter.get('/contacts/:contactId', ctrlWrapper(async (req, res, next) =>
 })
 );
 
+contactsRouter.delete('/contacts/:contactId', ctrlWrapper(deleteContactByIdController));
 
 export default contactsRouter;

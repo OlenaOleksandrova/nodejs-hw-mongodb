@@ -18,4 +18,10 @@ export const getContactById = async (contactId) => {
                  }
             return contact;
         };
+
+
 export const createContact = (contactData) => contactsCollection.create(contactData);
+
+export const deleteContactById = async (contactId) => {
+  await contactsCollection.findByIdAndDelete(contactId);
+};
