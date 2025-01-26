@@ -3,6 +3,7 @@ import { getAllContacts, getContactById } from '../services/contacts.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import createHttpError from 'http-errors';
 import {
+  createContactController,
   deleteContactByIdController,
   getAllContactsController,
   getContactByIdController,
@@ -41,15 +42,14 @@ contactsRouter.get(
 
 contactsRouter.get('/', ctrlWrapper(getAllContactsController));
 
-contactsRouter.get('/:studentId', ctrlWrapper(getContactByIdController));
+contactsRouter.get('/:contactId', ctrlWrapper(getContactByIdController));
+
+contactsRouter.post('/', ctrlWrapper(createContactController));
 
 contactsRouter.patch('/:contactId', ctrlWrapper(patchContactController));
 
 contactsRouter.put('/:contactId', ctrlWrapper(putContactController));
 
-contactsRouter.delete(
-  '/contacts/:contactId',
-  ctrlWrapper(deleteContactByIdController),
-);
+contactsRouter.delete('/:contactId', ctrlWrapper(deleteContactByIdController));
 
 export default contactsRouter;
