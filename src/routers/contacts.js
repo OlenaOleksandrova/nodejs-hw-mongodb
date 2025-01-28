@@ -10,8 +10,14 @@ import {
   patchContactController,
   putContactController,
 } from '../controllers/contacts.js';
+import { createContactSchema } from '../validation/createContactSchema.js';
+import { validateBody } from '../middlewares/validateBody.js';
+import { updateContactSchema } from '../validation/updateContactSchema copy.js';
+import { validateMongoId } from '../middlewares/validateMongoId.js';
 
 const contactsRouter = Router();
+
+contactsRouter.use('/:contactId', validateMongoId('contactId'));
 
 contactsRouter.get(
   '/contacts',
@@ -44,11 +50,23 @@ contactsRouter.get('/', ctrlWrapper(getAllContactsController));
 
 contactsRouter.get('/:contactId', ctrlWrapper(getContactByIdController));
 
-contactsRouter.post('/', ctrlWrapper(createContactController));
+contactsRouter.post(
+  '/',
+  validateBody(createContactSchema),
+  ctrlWrapper(createContactController),
+);
 
-contactsRouter.patch('/:contactId', ctrlWrapper(patchContactController));
+contactsRouter.patch(
+  '/:contactId',
+  validateBody(updateContactSchema),
+  ctrlWrapper(patchContactController),
+);
 
-contactsRouter.put('/:contactId', ctrlWrapper(putContactController));
+contactsRouter.put(
+  '/:contactId',
+  validateBody(createContactSchema),
+  ctrlWrapper(putContactController),
+);
 
 contactsRouter.delete('/:contactId', ctrlWrapper(deleteContactByIdController));
 
