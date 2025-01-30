@@ -6,7 +6,40 @@ import { contactsCollection } from '../db/models/Contacts.js';
 //     return contacts;
 // };
 
-export const getAllContacts = () => contactsCollection.find();
+const createPaginationMetadata = (page, perPage, totalItems) => {
+  const totalPages = Math.ceil(totalItems / perPage);
+  const hasNextPage = page < totalPages;
+  const hasPreviousPage = page !== 1 && page <= totalPages + 1;
+  return {
+    page,
+    perPage,
+    totalItems,
+    totalPages,
+    hasPreviousPage,
+    hasNextPage,
+  };
+};
+
+export const getAllContacts = async ({ page, perPage }) => {
+  const offset = (page - 1) * perPage;
+  const contacts = await contactsCollection.find().skip(offset).limit(perPage);
+  const totalItems = await contactsCollection.find().countDocuments();
+
+  const paginationMetadata = createPaginationMetadata(
+    page,
+    perPage,
+    totalItems,
+  );
+
+  return {
+    status: 200,
+    message: 'Successfully found contacts!',
+    data: {
+      contacts,
+      ...paginationMetadata,
+    },
+  };
+};
 
 // export const getContactById = (contactId) => contactsCollection.findById(contactId);
 
