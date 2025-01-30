@@ -20,9 +20,13 @@ const createPaginationMetadata = (page, perPage, totalItems) => {
   };
 };
 
-export const getAllContacts = async ({ page, perPage }) => {
+export const getAllContacts = async ({ page, perPage, sortBy, sortOrder }) => {
   const offset = (page - 1) * perPage;
-  const contacts = await contactsCollection.find().skip(offset).limit(perPage);
+  const contacts = await contactsCollection
+    .find()
+    .skip(offset)
+    .limit(perPage)
+    .sort({ [sortBy]: sortOrder });
   const totalItems = await contactsCollection.find().countDocuments();
 
   const paginationMetadata = createPaginationMetadata(
