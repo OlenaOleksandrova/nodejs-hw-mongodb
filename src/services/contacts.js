@@ -20,19 +20,44 @@ const createPaginationMetadata = (page, perPage, totalItems) => {
   };
 };
 
-export const getAllContacts = async ({ page, perPage, sortBy, sortOrder }) => {
+export const getAllContacts = async ({
+  page,
+  perPage,
+  sortBy,
+  sortOrder,
+  filter,
+}) => {
   const offset = (page - 1) * perPage;
-  const contacts = await contactsCollection
+  const filtersQuery = contactsCollection.find();
+
+  if (filter.type) {
+    filtersQuery.where('type').equals(filter.type);
+  }
+
+  if (filter.isFavourite || filter.isFavourite === false) {
+    filtersQuery.where('isFavourite').equals(filter.isFavourite);
+  }
+
+  const contactsQuery = contactsCollection
     .find()
+    .merge(filtersQuery)
     .skip(offset)
     .limit(perPage)
     .sort({ [sortBy]: sortOrder });
-  const totalItems = await contactsCollection.find().countDocuments();
+  const contactsCountQuery = contactsCollection
+    .find()
+    .merge(filtersQuery)
+    .countDocuments();
+
+  const [contacts, contactsCount] = await Promise.all([
+    contactsQuery,
+    contactsCountQuery,
+  ]);
 
   const paginationMetadata = createPaginationMetadata(
     page,
     perPage,
-    totalItems,
+    contactsCount,
   );
 
   return {
