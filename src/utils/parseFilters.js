@@ -1,5 +1,3 @@
-import { parseNumber } from './parseNumber.js';
-
 const parseContactType = (contactType) => {
   const isString = typeof contactType === 'string';
   if (!isString) return;
@@ -20,9 +18,13 @@ const parseBoolean = (value) => {
   }
 };
 
-export const parseFilters = (filter) => {
+export const parseFilters = (query) => {
   return {
-    type: parseContactType(filter.type),
-    isFavourite: parseBoolean(filter.isFavourite),
+    type: query?.type ? parseContactType(query.type) : undefined,
+    // isFavourite: parseBoolean(filter.isFavourite),
+    isFavourite:
+      query?.isFavourite !== undefined
+        ? parseBoolean(query.isFavourite)
+        : undefined,
   };
 };
