@@ -34,7 +34,7 @@ export const getAllContacts = async ({
     filtersQuery.where('type').equals(filter.type);
   }
 
-  if (filter.isFavourite || filter.isFavourite === false) {
+  if (typeof filter.isFavourite === 'boolean') {
     filtersQuery.where('isFavourite').equals(filter.isFavourite);
   }
 

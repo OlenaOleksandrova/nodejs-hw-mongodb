@@ -15,7 +15,7 @@ export const getAllContactsController = async (req, res) => {
 
   const { sortOrder, sortBy } = parseSortParams(req.query);
 
-  const filter = parseFilters(req.query.filter);
+  const filter = parseFilters(req.query);
 
   const contacts = await getAllContacts({
     page,
@@ -84,12 +84,10 @@ export const putContactController = async (req, res) => {
 
 export const deleteContactByIdController = async (req, res, next) => {
   const { contactId } = req.params;
-
-  if (!contactId) {
+  const contact = await deleteContactById(contactId);
+  if (!contact) {
     throw createHttpError(404, 'Contact not found');
   }
-
-  await deleteContactById(contactId);
 
   res.status(204).send();
 };
