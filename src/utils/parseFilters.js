@@ -3,7 +3,7 @@ const parseContactType = (contactType) => {
   if (!isString) return;
 
   const isContactType = (contactType) =>
-    ['work', 'home', 'personal'].includes(contactType);
+    ['home', 'personal'].includes(contactType);
   if (isContactType(contactType)) return contactType;
 };
 
