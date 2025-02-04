@@ -73,7 +73,7 @@ export const putContactController = async (req, res) => {
   const { contactId } = req.params;
   const { body } = req;
 
-  const contact = await updateContact(contactId, body, { upsert: truen });
+  const contact = await updateContact(contactId, body, { upsert: true });
 
   res.json({
     status: 200,
