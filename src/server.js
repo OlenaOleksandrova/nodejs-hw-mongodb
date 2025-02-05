@@ -2,7 +2,7 @@ import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 import { getEnvVar } from './utils/getEnvVar.js';
-// import { createContactController, getAllContactsController, getContactByIdController } from "./controllers/contacts.js";
+import cookieParser from 'cookie-parser';
 import contactsRouter from './routers/contacts.js';
 import { errorHandlerMiddleware } from './middlewares/errorHandler.js';
 import { notFoundHandlerMiddleware } from './middlewares/notFoundHandler.js';
@@ -18,6 +18,7 @@ export const setupServer = () => {
   app.use(express.json());
 
   app.use(cors());
+  app.use(cookieParser());
 
   app.use(
     pino({
