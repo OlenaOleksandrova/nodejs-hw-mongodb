@@ -72,8 +72,8 @@ export const getAllContacts = async ({
 
 // export const getContactById = (contactId) => contactsCollection.findById(contactId);
 
-export const getContactById = async (contactId) => {
-  const contact = await contactsCollection.findById(contactId);
+export const getContactById = async (contactId, userId) => {
+  const contact = await contactsCollection.findOne({ _id: contactId, userId });
 
   if (!contact) {
     throw new createHttpError(404, 'Contact not found');
@@ -84,9 +84,17 @@ export const getContactById = async (contactId) => {
 export const createContact = (contactData) =>
   contactsCollection.create(contactData);
 
-export const updateContact = async (contactId, payload, options = {}) => {
-  const contactUp = await contactsCollection.findByIdAndUpdate(
-    contactId,
+export const updateContact = async (
+  contactId,
+  userId,
+  payload,
+  options = {},
+) => {
+  const contactUp = await contactsCollection.findByOneAndUpdate(
+    {
+      _id: contactId,
+      userId,
+    },
     payload,
     { new: true, ...options },
   );
@@ -97,6 +105,14 @@ export const updateContact = async (contactId, payload, options = {}) => {
   return contactUp;
 };
 
-export const deleteContactById = async (contactId) => {
-  await contactsCollection.findByIdAndDelete(contactId);
+export const deleteContactById = async (contactId, userId) => {
+  const contact = await contactsCollection.findOneAndDelete({
+    _id: contactId,
+    userId,
+  });
+
+  if (!contact) {
+    throw new createHttpError(404, 'Contact does not belong to user');
+  }
+  return contact;
 };

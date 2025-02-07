@@ -1,32 +1,40 @@
-import { model, Schema } from "mongoose";
+// import { required } from 'joi';
+import { model, Schema, Types } from 'mongoose';
+import { userCollection } from './User.js';
 
-const contactsSchema = new Schema({
+const contactsSchema = new Schema(
+  {
     name: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     phoneNumber: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     email: {
-        type: String,
+      type: String,
     },
     isFavourite: {
-        type: Boolean,
-        default: false,
+      type: Boolean,
+      default: false,
     },
     contactType: {
-        type: String,
-        enum: ["work", "home", "personal"],
-        required: true,
-        default: "personal",
+      type: String,
+      enum: ['work', 'home', 'personal'],
+      required: true,
+      default: 'personal',
     },
-},
-    {
-        timestamps: true,
-        versionKey: false,
+    userId: {
+      type: Types.ObjectId,
+      ref: userCollection,
+      required: true,
     },
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+  },
 );
 
-export const contactsCollection = model("contact", contactsSchema);
+export const contactsCollection = model('contact', contactsSchema);
