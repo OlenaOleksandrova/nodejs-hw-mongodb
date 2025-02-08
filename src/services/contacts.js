@@ -21,6 +21,7 @@ const createPaginationMetadata = (page, perPage, totalItems) => {
 };
 
 export const getAllContacts = async ({
+  userId,
   page,
   perPage,
   sortBy,
@@ -28,7 +29,8 @@ export const getAllContacts = async ({
   filter,
 }) => {
   const offset = (page - 1) * perPage;
-  const filtersQuery = contactsCollection.find();
+
+  const filtersQuery = contactsCollection.find(userId);
 
   if (filter.type) {
     filtersQuery.where('contactType').equals(filter.type);
@@ -39,13 +41,13 @@ export const getAllContacts = async ({
   }
 
   const contactsQuery = contactsCollection
-    .find()
+    .find(userId)
     .merge(filtersQuery)
     .skip(offset)
     .limit(perPage)
     .sort({ [sortBy]: sortOrder });
   const contactsCountQuery = contactsCollection
-    .find()
+    .find(userId)
     .merge(filtersQuery)
     .countDocuments();
 

@@ -22,7 +22,7 @@ authRouter.post(
   validateBody(loginUserValidationSchema),
   ctrlWrapper(loginUserController),
 );
-authRouter.post('/refresh-session', ctrlWrapper(refreshSessionController));
+authRouter.post('/refresh', ctrlWrapper(refreshSessionController));
 authRouter.post('/logout', ctrlWrapper(logoutUserController));
 
 export default authRouter;
