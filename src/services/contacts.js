@@ -30,7 +30,7 @@ export const getAllContacts = async ({
 }) => {
   const offset = (page - 1) * perPage;
 
-  const filtersQuery = contactsCollection.find(userId);
+  const filtersQuery = contactsCollection.find({ userId });
 
   if (filter.type) {
     filtersQuery.where('contactType').equals(filter.type);
@@ -41,13 +41,13 @@ export const getAllContacts = async ({
   }
 
   const contactsQuery = contactsCollection
-    .find(userId)
+    .find({ userId })
     .merge(filtersQuery)
     .skip(offset)
     .limit(perPage)
     .sort({ [sortBy]: sortOrder });
   const contactsCountQuery = contactsCollection
-    .find(userId)
+    .find({ userId })
     .merge(filtersQuery)
     .countDocuments();
 

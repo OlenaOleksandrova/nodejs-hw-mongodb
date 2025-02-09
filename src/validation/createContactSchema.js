@@ -9,5 +9,5 @@ export const createContactSchema = Joi.object({
   }),
   phoneNumber: Joi.number().required(),
   email: Joi.string().required(),
-  contactType: Joi.string().required(),
+  contactType: Joi.string(),
 });
