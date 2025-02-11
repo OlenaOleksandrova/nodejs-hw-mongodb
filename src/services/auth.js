@@ -3,6 +3,9 @@ import { userCollection } from '../db/models/User.js';
 import bcrypt from 'bcrypt';
 import { sessionCollection } from '../db/models/session.js';
 import crypto from 'node:crypto';
+import { sendEmail } from '../utils/sendEmail.js';
+import { getEnvVar } from '../utils/getEnvVar.js';
+import { ENV_VARS } from '../constants/env.js';
 
 const createSession = () => ({
   accessToken: crypto.randomBytes(20).toString('base64'),
@@ -78,4 +81,21 @@ export const refreshSession = async ({ sessionToken, sessionId }) => {
     userId: session.userId,
   });
   return newSession;
+};
+
+export const requestResetPasswordEmail = async (email) => {
+  const user = await userCollection.findOne({ email });
+
+  if (!user) {
+    throw new createHttpError(404, 'User not found!');
+  }
+
+  console.log('Sending email to:', email);
+
+  await sendEmail({
+    to: email,
+    from: getEnvVar(ENV_VARS.SMTP_FROM),
+    subject: 'Reset password',
+    html: '<h1>Hello world!</h1>',
+  });
 };
