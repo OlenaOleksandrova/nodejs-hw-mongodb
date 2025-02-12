@@ -1,11 +1,20 @@
 import createHttpError from 'http-errors';
 import { userCollection } from '../db/models/User.js';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import Handlebars from 'handlebars';
+import fs from 'node:fs';
 import { sessionCollection } from '../db/models/session.js';
 import crypto from 'node:crypto';
 import { sendEmail } from '../utils/sendEmail.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import { ENV_VARS } from '../constants/env.js';
+import path from 'node:path';
+import { TEMPLATES_DIR_PATH } from '../constants/path.js';
+
+const resetEmailTemplate = fs
+  .readFileSync(path.join(TEMPLATES_DIR_PATH, 'reset-password.html'))
+  .toString();
 
 const createSession = () => ({
   accessToken: crypto.randomBytes(20).toString('base64'),
@@ -90,12 +99,49 @@ export const requestResetPasswordEmail = async (email) => {
     throw new createHttpError(404, 'User not found!');
   }
 
-  console.log('Sending email to:', email);
+  const token = jwt.sign(
+    { sub: user._id, email },
+    getEnvVar(ENV_VARS.JWT_SECRET),
+    {
+      expiresIn: '5m',
+    },
+  );
+
+  const resetPasswordLink = `${getEnvVar(
+    ENV_VARS.FRONTEND_DOMAIN,
+  )}/reset-password?token=${token}`;
+
+  const template = Handlebars.compile(resetEmailTemplate);
+
+  const html = template({
+    name: user.name,
+    link: resetPasswordLink,
+  });
 
   await sendEmail({
     to: email,
     from: getEnvVar(ENV_VARS.SMTP_FROM),
     subject: 'Reset password',
-    html: '<h1>Hello world!</h1>',
+    html,
+  });
+};
+
+export const resetPassword = async ({ password, token }) => {
+  let payload;
+  try {
+    payload = jwt.verify(token, getEnvVar(ENV_VARS.JWT_SECRET));
+  } catch (err) {
+    console.error(err);
+    throw new createHttpError(401, 'Token is expired or invalid.');
+  }
+
+  const user = await userCollection.findById(payload.sub);
+
+  if (!user) {
+    throw new createHttpError(404, 'User not found!');
+  }
+  const hashedPassword = await bcrypt.hash(password, 10);
+  await userCollection.findByIdAndUpdate(user._id, {
+    password: hashedPassword,
   });
 };
