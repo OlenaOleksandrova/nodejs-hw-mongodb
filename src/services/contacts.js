@@ -1,5 +1,9 @@
+import fs from 'fs/promises';
+import path from 'path';
 import createHttpError from 'http-errors';
 import { contactsCollection } from '../db/models/Contacts.js';
+import { upload } from '../middlewares/multer.js';
+import { UPLOADS_DIR_PATH } from '../constants/path.js';
 
 // export const getAllContacts = async () => {
 //     const contacts = await contactsCollection.find();
@@ -89,9 +93,12 @@ export const createContact = (contactData) =>
 export const updateContact = async (
   contactId,
   userId,
-  payload,
+  { photo, ...payload },
   options = {},
 ) => {
+  if (photo) {
+    await fs.rename(photo.path, path.join(UPLOADS_DIR_PATH, photo.filename));
+  }
   const contactUp = await contactsCollection.findOneAndUpdate(
     {
       _id: contactId,

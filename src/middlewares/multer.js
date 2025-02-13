@@ -1,13 +1,15 @@
 import multer from 'multer';
+import path from 'node:path';
+import { TEMP_DIR_PATH } from '../constants/path.js';
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    // cb(null, '/tmp/my-uploads');
-    cb(null, '/temp');
+    cb(null, TEMP_DIR_PATH);
   },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + '-' + uniqueSuffix);
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now();
+
+    cb(null, `${uniqueSuffix}-${file.originalname}`);
   },
 });
 
