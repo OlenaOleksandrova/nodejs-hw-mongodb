@@ -30,7 +30,7 @@ const contactsSchema = new Schema(
       ref: userCollection,
       required: true,
     },
-    photoUrl: { type: String, default: null, required: false },
+    photo: { type: String, default: null, required: false },
   },
   {
     timestamps: true,

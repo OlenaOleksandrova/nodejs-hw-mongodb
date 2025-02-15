@@ -16,13 +16,27 @@ const createPaginationMetadata = (page, perPage, totalItems) => {
   const totalPages = Math.ceil(totalItems / perPage);
   const hasNextPage = page < totalPages;
   const hasPreviousPage = page !== 1 && page <= totalPages + 1;
+  // return {
+  //   page,
+  //   perPage,
+  //   totalItems,
+  //   totalPages,
+  //   hasPreviousPage,
+  //   hasNextPage,
+  // };
+
   return {
-    page,
-    perPage,
-    totalItems,
-    totalPages,
-    hasPreviousPage,
-    hasNextPage,
+    status: 200,
+    message: 'Successfully found contacts!',
+    data: {
+      contacts: [],
+      page: 1,
+      perPage: 10,
+      totalItems: 0,
+      totalPages: 0,
+      hasPreviousPage: false,
+      hasNextPage: false,
+    },
   };
 };
 
