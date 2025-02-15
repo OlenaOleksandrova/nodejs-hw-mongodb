@@ -4,6 +4,8 @@ import createHttpError from 'http-errors';
 import { contactsCollection } from '../db/models/Contacts.js';
 import { upload } from '../middlewares/multer.js';
 import { UPLOADS_DIR_PATH } from '../constants/path.js';
+import { saveFileToLocal } from '../utils/saveFileToLocal.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 // export const getAllContacts = async () => {
 //     const contacts = await contactsCollection.find();
@@ -96,15 +98,21 @@ export const updateContact = async (
   { photo, ...payload },
   options = {},
 ) => {
+  let photoUrl;
   if (photo) {
-    await fs.rename(photo.path, path.join(UPLOADS_DIR_PATH, photo.filename));
+    photoUrl = await saveFileToLocal(photo);
+    // photoUrl = await saveFileToCloudinary(photo);
   }
+
   const contactUp = await contactsCollection.findOneAndUpdate(
     {
       _id: contactId,
       userId,
     },
-    payload,
+    {
+      ...payload,
+      ...(photoUrl ? { photoUrl } : {}),
+    },
     { new: true, ...options },
   );
 

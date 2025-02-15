@@ -7,6 +7,7 @@ import contactsRouter from './routers/contacts.js';
 import { errorHandlerMiddleware } from './middlewares/errorHandler.js';
 import { notFoundHandlerMiddleware } from './middlewares/notFoundHandler.js';
 import authRouter from './routers/auth.js';
+import { UPLOADS_DIR_PATH } from './constants/path.js';
 
 const PORT = Number(getEnvVar('PORT', '3000'));
 
@@ -20,6 +21,8 @@ export const setupServer = () => {
   app.use(cors());
   app.use(cookieParser());
 
+  app.use('/uploads', express.static(UPLOADS_DIR_PATH));
+
   app.use(
     pino({
       transport: {
@@ -27,8 +30,6 @@ export const setupServer = () => {
       },
     }),
   );
-
-  // app.use(contactsRouter);
 
   app.use('/contacts', contactsRouter);
 
