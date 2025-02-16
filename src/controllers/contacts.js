@@ -9,6 +9,7 @@ import {
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilters } from '../utils/parseFilters.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export const getAllContactsController = async (req, res) => {
   const userId = req.user._id;
@@ -28,9 +29,12 @@ export const getAllContactsController = async (req, res) => {
     filter,
   });
 
+  if (!contacts) {
+    throw createHttpError(404, 'Contacts not found');
+  }
+
   res.status(200).json({
     data: contacts,
-    message: 'Successfully found contacts!',
   });
 };
 export const getContactByIdController = async (req, res, next) => {
@@ -57,10 +61,14 @@ export const createContactController = async (req, res) => {
   let photoUrl = null;
 
   if (req.file) {
-    photoUrl = `/uploads/${req.file.filename}`;
+    photoUrl = await saveFileToCloudinary(req.file);
   }
 
-  const newContact = await createContact({ ...req.body, userId, photoUrl });
+  const newContact = await createContact({
+    ...req.body,
+    userId,
+    photo: photoUrl,
+  });
 
   res.status(201).json({
     status: 201,

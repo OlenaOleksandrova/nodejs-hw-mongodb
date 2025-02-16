@@ -5,6 +5,7 @@ import { getEnvVar } from './getEnvVar.js';
 import createHttpError from 'http-errors';
 
 cloudinary.config({
+  secure: true,
   cloud_name: getEnvVar(ENV_VARS.CLOUDINARY_CLOUD_NAME),
   api_key: getEnvVar(ENV_VARS.CLOUDINARY_API_KEY),
   api_secret: getEnvVar(ENV_VARS.CLOUDINARY_API_SECRET),
