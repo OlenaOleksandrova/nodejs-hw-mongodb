@@ -95,24 +95,15 @@ export const createContact = (contactData) =>
 export const updateContact = async (
   contactId,
   userId,
-  { photo, ...payload },
+  payload,
   options = {},
 ) => {
-  let photoUrl;
-  if (photo) {
-    // photoUrl = await saveFileToLocal(photo);
-    photoUrl = await saveFileToCloudinary(photo);
-  }
-
   const contactUp = await contactsCollection.findOneAndUpdate(
     {
       _id: contactId,
       userId,
     },
-    {
-      ...payload,
-      ...(photoUrl ? { photoUrl } : {}),
-    },
+    payload,
     { new: true, ...options },
   );
 
