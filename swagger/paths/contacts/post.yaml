@@ -18,17 +18,17 @@ requestBody:
           - contactType
         properties:
           name:
-            description: "SContacts's name"
+            description: "SContact's name"
             type: string
             example: 'John Doe'
           phoneNumber:
-            description: "Contacts's phoneNumber"
+            description: "Contact's phoneNumber"
             type: number
             example: 1234567891
           email:
-            description: "Contacts's email"
+            description: "Contact's email"
             type: string
-            example: test
+            example: test@meta.ua
           isFavourite:
             description: 'Is it favorite contact?'
             type: boolean

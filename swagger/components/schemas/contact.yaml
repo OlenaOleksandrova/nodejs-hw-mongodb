@@ -19,7 +19,7 @@ properties:
   phoneNumber:
     description: "Contact's phoneNumber"
     type: string
-    example: 125563734
+    example: 1234567891
   email:
     description: "Contact's email"
     type: string
@@ -33,7 +33,7 @@ properties:
     enum: ['work', 'home', 'personal']
     example: 'personal'
   userId:
-    description: 'User id of user'
+    description: 'User id'
     type: string
     example: 65e4decdd286b30065d54af9
   photo:
